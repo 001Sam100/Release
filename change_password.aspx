@@ -8,7 +8,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-    <table style="border:1px solid black; background-color:White">
+    <table style="border:1px solid black; background-color:Red">
         <tr>
             <td><span style="color: #FF0000; font-weight: bold; text-decoration: underline;">
                 Change Password</span></td>
