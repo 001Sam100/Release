@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Category xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CategoryID>1</CategoryID>
+  <CategoryName>Phone</CategoryName>
+  <Item>
+    <Item>
+      <ItemID>0</ItemID>
+      <ItemName> Item Name : 0</ItemName>
+      <ItemPrice>0</ItemPrice>
+      <ItemQtyInStock>10</ItemQtyInStock>
+    </Item>
+    <Item>
+      <ItemID>1</ItemID>
+      <ItemName> Item Name : 1</ItemName>
+      <ItemPrice>10</ItemPrice>
+      <ItemQtyInStock>11</ItemQtyInStock>
+    </Item>
+    <Item>
+      <ItemID>2</ItemID>
+      <ItemName> Item Name : 2</ItemName>
+      <ItemPrice>20</ItemPrice>
+      <ItemQtyInStock>12</ItemQtyInStock>
+    </Item>
+    <Item>
+      <ItemID>3</ItemID>
+      <ItemName> Item Name : 3</ItemName>
+      <ItemPrice>30</ItemPrice>
+      <ItemQtyInStock>13</ItemQtyInStock>
+    </Item>
+    <Item>
+      <ItemID>4</ItemID>
+      <ItemName> Item Name : 4</ItemName>
+      <ItemPrice>40</ItemPrice>
+      <ItemQtyInStock>14</ItemQtyInStock>
+    </Item>
+  </Item>
+</Category>

@@ -1,0 +1,2198 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI.WebControls;
+using System.Web.UI;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+using System.Data.OleDb;
+using System.Net.Mail;
+using System.Web.Mail;
+ 
+/// <summary>
+/// Summary description for FDal
+/// </summary>
+public class FDal : CRMSQLHelper
+{
+    DataSet ds;
+    public FDal()
+    {
+        //
+        // TODO: Add constructor logic here
+        //
+    }
+    public void NumberBindDD(DropDownList dd, int initialize, int terminate)
+    {
+        for (int i = initialize; i <= terminate; i++)
+        {
+            dd.Items.Add(i.ToString());
+
+        }
+        dd.Items.Insert(0, "---Select Number Of KOID---");
+    }
+    public void DDBind(DropDownList dd, string proc, string VirtualTable, string TextField, string ValueField)
+    {
+        try
+        {
+            ds = ReturnDataset(proc, VirtualTable);
+            if (ds.Tables[VirtualTable].Rows.Count > 0)
+            {
+                dd.DataSource = ds.Tables[VirtualTable];
+                dd.DataTextField = TextField;
+                dd.DataValueField = ValueField;
+                dd.DataBind();
+            }
+            ListItem li = new ListItem();
+            li.Text = "--Select--";
+            li.Value = "0";
+            dd.Items.Insert(0, li);
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+        }
+    }
+
+    public void DDBindByIntID(DropDownList dd, string proc, string sqlvar, int id, string VirtualTable, string TextField, string ValueField)
+    {
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar, id);
+            ds = ExecuteDataset(proc, new SqlParameter[] { sp1 }, VirtualTable);
+            if (ds.Tables[VirtualTable].Rows.Count > 0)
+            {
+                dd.DataSource = ds.Tables[VirtualTable];
+                dd.DataTextField = TextField;
+                dd.DataValueField = ValueField;
+                dd.DataBind();
+            }
+            ListItem li = new ListItem();
+            li.Text = "--Select--";
+            li.Value = "0";
+            dd.Items.Insert(0, li);
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+        }
+    }
+
+    public DataSet GridBind(string Proc, string vt, GridView Gridv)
+    {
+        DataSet dsg = new DataSet();
+        try
+        {
+            dsg = ReturnDataset(Proc, vt);
+
+            Gridv.DataSource = dsg.Tables[vt];
+            Gridv.DataBind();
+
+            return dsg;
+        }
+        catch (Exception Ex)
+        {
+            string str = Ex.Message;
+            return null;
+        }
+    }
+    public DataSet DLBind(string Proc, string vt, DataList DL)
+    {
+        DataSet dsg = new DataSet();
+        try
+        {
+            dsg = ReturnDataset(Proc, vt);
+
+            DL.DataSource = dsg.Tables[vt];
+            DL.DataBind();
+
+            return dsg;
+        }
+        catch (Exception Ex)
+        {
+            string str = Ex.Message;
+            return null;
+        }
+    }
+
+    public string GetCspID(string Proc, string vt, string KOID)
+    {
+        DataSet dsg = new DataSet();
+        try
+        {
+            dsg = ReturnDataset(Proc, vt, KOID);
+            if (dsg.Tables[vt].Rows.Count != 0)
+            {
+                string cspid = dsg.Tables[vt].Rows[0][0].ToString();
+                return cspid;
+            }
+            else
+            {
+                return "";
+            }
+
+
+        }
+        catch (Exception Ex)
+        {
+            string str = Ex.Message;
+            return str;
+        }
+    }
+    public DataSet GridBindBYStringID(string proc, GridView gv, string vt, string sqlvar, string id)
+    {
+
+        FSqlHelper fsh = new FSqlHelper();
+
+
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar, id);
+            DataSet ds = fsh.ExecuteDataset(proc, new SqlParameter[] { sp1 }, vt);
+            gv.DataSource = ds;
+            gv.DataBind();
+            return ds;
+
+        }
+        catch (Exception ex)
+        {
+
+            string str = ex.Message;
+            return null;
+        }
+    }
+    public DataSet DetailsViewBind(string proc, DetailsView DV, string vt, string sqlvar, string id)
+    {
+
+        FSqlHelper fsh = new FSqlHelper();
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar, id);
+            DataSet ds = fsh.ExecuteDataset(proc, new SqlParameter[] { sp1 }, vt);
+            DV.DataSource = ds;
+            DV.DataBind();
+            return ds;
+
+        }
+        catch (Exception ex)
+        {
+
+            string str = ex.Message;
+            return null;
+        }
+    }
+    public DataSet ReturnDatasetBYStringID(string proc, string vt, string sqlvar, string id)
+    {
+
+        FSqlHelper fsh = new FSqlHelper();
+
+
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar, id);
+            DataSet ds = fsh.ExecuteDataset(proc, new SqlParameter[] { sp1 }, vt);
+            return ds;
+
+        }
+        catch (Exception ex)
+        {
+
+            string str = ex.Message;
+            return null;
+        }
+    }
+
+    public DataSet GridBindBYStringIDNew(string proc, GridView gv, string vt, string sqlvar, string id)
+    {
+
+        FSqlHelper fsh = new FSqlHelper();
+
+
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar, id);
+            DataSet ds = fsh.ExecuteDataset(proc, new SqlParameter[] { sp1 }, vt);
+            ds.Tables[vt].Columns.RemoveAt(0);
+            gv.DataSource = ds;
+            gv.DataBind();
+            return ds;
+
+        }
+        catch (Exception ex)
+        {
+
+            string str = ex.Message;
+            return null;
+        }
+    }
+    public DataSet FlipGridBindBYStringID(string proc, GridView gv, string vt, string sqlvar, string id)
+    {
+
+        FSqlHelper fsh = new FSqlHelper();
+
+
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar, id);
+            DataSet ds = fsh.ExecuteDataset(proc, new SqlParameter[] { sp1 }, vt);
+            ds = FlipDataSet(ds);
+            // ds.Tables[0].Rows[0].Delete();
+            DataView my_DataView = ds.Tables[0].DefaultView;
+            gv.DataSource = my_DataView;
+            gv.DataBind();
+            return ds;
+
+        }
+        catch (Exception ex)
+        {
+
+            string str = ex.Message;
+            return null;
+        }
+    }
+
+    public string InsertMstState(string Proc, string sqlvar, string state, TextBox txt)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@state", state);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+                txt.Text = "";
+                txt.Focus();
+            }
+            if (issuccess == 2)
+            {
+                txt.Text = "";
+                strSuccess = "Duplicate entry not allowed";
+                return strSuccess;
+
+            }
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public void Focus(TextBox txt, Page opg)
+    {
+        if (!opg.IsPostBack)
+        {
+            txt.Focus();
+        }
+    }
+
+
+    public string UpdateMststate(string sqlvar1, string sqlvar2, int id, string value, string proc)
+    {
+        bool issuccess = false;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar1, id);
+            SqlParameter sp2 = new SqlParameter(sqlvar2, value);
+            ExecuteNonQuery(proc, new SqlParameter[] { sp1, sp2 });
+            if (issuccess)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+
+    public string Delete(string sqlvar1, int id, string proc)
+    {
+        bool issuccess = false;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar1, id);
+            ExecuteNonQuery(proc, new SqlParameter[] { sp1 });
+            if (issuccess)
+            {
+                strSuccess = "Deleted Successfully";
+            }
+            else
+            {
+                strSuccess = "Deletion Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+    public string DeleteBystringID(string sqlvar1, string id, string proc)
+    {
+        bool issuccess = false;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar1, id);
+            ExecuteNonQuery(proc, new SqlParameter[] { sp1 });
+            if (issuccess)
+            {
+                strSuccess = "Deleted Successfully";
+            }
+            else
+            {
+                strSuccess = "Deletion Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+    public string DeleteByStringID(string sqlvar1, string ID, string proc)
+    {
+        int issuccess = 0;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar1, ID);
+            issuccess = ExecuteNonQuery(proc, new SqlParameter[] { sp1 });
+            if (issuccess != 0)
+            {
+                strSuccess = "Deleted Successfully";
+            }
+            else
+            {
+                strSuccess = "Deletion Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+    public string InsertMstRegion(string Proc, string sqlvar1, string sqlvar2, int stateid, string region, TextBox txt)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@stateid", stateid);
+            SqlParameter sp2 = new SqlParameter("@region", region);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+                txt.Text = "";
+            }
+            if (issuccess == 2)
+            {
+                txt.Text = "";
+                strSuccess = "Duplicate entry not allowed";
+                return strSuccess;
+
+            }
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+
+    public string UpdateMstRegion(string sqlvar1, string sqlvar2, string sqlvar3, int id, int stateid, string region, string proc)
+    {
+        bool issuccess = false;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar1, id);
+            SqlParameter sp2 = new SqlParameter(sqlvar2, stateid);
+            SqlParameter sp3 = new SqlParameter(sqlvar3, region);
+            ExecuteNonQuery(proc, new SqlParameter[] { sp1, sp2, sp3 });
+            if (issuccess)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+
+    public string InsertMstDistrict(string Proc, string sqlvar1, string sqlvar2, string sqlvar3, int stateid, int regionid, string district, TextBox txt)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@stateid", stateid);
+            SqlParameter sp2 = new SqlParameter("@regionid", regionid);
+            SqlParameter sp3 = new SqlParameter("@district", district);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+                txt.Text = "";
+            }
+            if (issuccess == 2)
+            {
+                txt.Text = "";
+                strSuccess = "Duplicate entry not allowed";
+                return strSuccess;
+
+            }
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public string UpdateMstDistrict(string sqlvar1, string sqlvar2, string sqlvar3, string sqlvar4, int did, int stateid, int regionid, string district, string proc)
+    {
+        bool issuccess = false;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar1, did);
+            SqlParameter sp2 = new SqlParameter(sqlvar2, stateid);
+            SqlParameter sp3 = new SqlParameter(sqlvar3, regionid);
+            SqlParameter sp4 = new SqlParameter(sqlvar4, district);
+            ExecuteNonQuery(proc, new SqlParameter[] { sp1, sp2, sp3, sp4 });
+            if (issuccess)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+
+    public string InserCSPLogin(string Proc, string Name, string saveacno, int state, int region, int district, string block,
+        string village, string emailid, string address, string mobileno, string userid, string password)
+    {
+
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@name", Name);
+            SqlParameter sp2 = new SqlParameter("@saveacno", saveacno);
+            SqlParameter sp3 = new SqlParameter("@state", state);
+            SqlParameter sp4 = new SqlParameter("@region", region);
+            SqlParameter sp5 = new SqlParameter("@district", district);
+            SqlParameter sp6 = new SqlParameter("@block", block);
+            SqlParameter sp7 = new SqlParameter("@village", village);
+            SqlParameter sp8 = new SqlParameter("@emailid", emailid);
+            SqlParameter sp9 = new SqlParameter("@address", address);
+            SqlParameter sp10 = new SqlParameter("@mobileno", mobileno);
+            SqlParameter sp11 = new SqlParameter("@userid", userid);
+            SqlParameter sp12 = new SqlParameter("@password", password);
+            SqlParameter sp13 = new SqlParameter("@regdate", System.DateTime.Now.ToString());
+            strSuccess = ExecuteNonQueryOutput(Proc, "@Returncspid", new SqlParameter[] { sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8, sp9, sp10, sp11, sp12, sp13 });
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public string InsertCSPPlan(string Proc, string cspid, string saveacno, string plan, int planid, double price, string startingdate, string expirydate, int totaldays, int remainingdays, string requestid)
+    {
+        int IsSuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            SqlParameter sp2 = new SqlParameter("@saveacno", saveacno);
+            SqlParameter sp3 = new SqlParameter("@plan", plan);
+            SqlParameter sp4 = new SqlParameter("@price", price);
+            SqlParameter sp5 = new SqlParameter("@startingdate", startingdate);
+            SqlParameter sp6 = new SqlParameter("@expirydate", expirydate);
+            SqlParameter sp7 = new SqlParameter("@totaldays", totaldays);
+            SqlParameter sp8 = new SqlParameter("@remainingdays", remainingdays);
+            SqlParameter sp9 = new SqlParameter("@planid", planid);
+            SqlParameter sp10 = new SqlParameter("@RequestID", requestid);
+            IsSuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8, sp9, sp10 });
+            if (IsSuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+
+            }
+
+            if (IsSuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public string InsertMstCSPPlan(string Proc, string cspid, string plan, double price, int planid, string requestdate, int totaldays, int numberofkoid)
+    {
+
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            SqlParameter sp2 = new SqlParameter("@plan", plan);
+            SqlParameter sp3 = new SqlParameter("@price", price);
+            SqlParameter sp4 = new SqlParameter("@planid", planid);
+            SqlParameter sp5 = new SqlParameter("@requestdate", requestdate);
+            SqlParameter sp6 = new SqlParameter("@totaldays", totaldays);
+            SqlParameter sp7 = new SqlParameter("@numberofkoid", numberofkoid);
+            strSuccess = ExecuteNonQueryOutput(Proc, "@ReturnRequestID", new SqlParameter[] { sp1, sp2, sp3, sp4, sp5, sp6, sp7 });
+            return strSuccess;
+
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public string InsertActivationRequest(string Proc, string cspid, string saveacno, string tranid, string trandate, string requestid)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            SqlParameter sp2 = new SqlParameter("@saveacno", saveacno);
+            SqlParameter sp3 = new SqlParameter("@tranid", tranid);
+            SqlParameter sp4 = new SqlParameter("@trandate", trandate);
+            SqlParameter sp5 = new SqlParameter("@Requestid", requestid);
+
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public string fileupoad(FileUpload fu)
+    {
+        try
+        {
+            string filename = "";
+            string filepath = "";
+            if (fu.HasFile)
+            {
+                filepath = fu.PostedFile.FileName;
+                filename = Path.GetFileName(filepath);
+                fu.PostedFile.SaveAs(HttpContext.Current.Server.MapPath(@"~/Report/" + filename));
+                return filename;
+            }
+            return filename;
+
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+    public string InsertDailyReport(string Proc, int srno, string date, string saveacno, double tr, double deposit, double withdrawl, double total, double officebalance, double cashinhand)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@srno", srno);
+            SqlParameter sp2 = new SqlParameter("@currentdate", date);
+            SqlParameter sp3 = new SqlParameter("@saveacno", saveacno);
+            SqlParameter sp4 = new SqlParameter("@Tr", tr);
+            SqlParameter sp5 = new SqlParameter("@deposit", deposit);
+            SqlParameter sp6 = new SqlParameter("@withdrawl", withdrawl);
+            SqlParameter sp7 = new SqlParameter("@total", total);
+            SqlParameter sp8 = new SqlParameter("@officebalance", officebalance);
+            SqlParameter sp9 = new SqlParameter("@cashinhand", cashinhand);
+
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8, sp9 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public string InsertCompleteReport(string Proc, int srno, string startingdate, string enddate, string saveacno, double tr, double deposit, double withdrawl, double total, double officebalance, double cashinhand)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@srno", srno);
+            SqlParameter sp2 = new SqlParameter("@startdate", startingdate);
+            SqlParameter sp3 = new SqlParameter("@enddate", enddate);
+            SqlParameter sp4 = new SqlParameter("@saveacno", saveacno);
+            SqlParameter sp5 = new SqlParameter("@Tr", tr);
+            SqlParameter sp6 = new SqlParameter("@deposit", deposit);
+            SqlParameter sp7 = new SqlParameter("@withdrawl", withdrawl);
+            SqlParameter sp8 = new SqlParameter("@total", total);
+            SqlParameter sp9 = new SqlParameter("@officebalance", officebalance);
+            SqlParameter sp10 = new SqlParameter("@cashinhand", cashinhand);
+
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8, sp9, sp10 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+    public string InsertKoOperation(string Proc, int srno, string koid, double deposit, double withdrawl, double depositc, double withdrawc, string date, string uploaddate)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@srno", srno);
+            SqlParameter sp2 = new SqlParameter("@koid", koid);
+            SqlParameter sp3 = new SqlParameter("@deposit", deposit);
+            SqlParameter sp4 = new SqlParameter("@withdrawl", withdrawl);
+            SqlParameter sp5 = new SqlParameter("@depositc", depositc);
+            SqlParameter sp6 = new SqlParameter("@withdrawlc", withdrawc);
+            SqlParameter sp7 = new SqlParameter("@date", date);
+            SqlParameter sp8 = new SqlParameter("@uploaddate", uploaddate);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+    public int CheckReportExistence(string proc, string sqlvar, string outsqlvar, string date)
+    {
+        int output = 0;
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@date", date);
+            output = ExecuteNonQueryOutputInt(proc, outsqlvar, new SqlParameter[] { sp1 });
+            return output;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            output = 0;
+            return output;
+        }
+    }
+
+    public int Updatestatus(string proc)
+    {
+
+
+        try
+        {
+
+
+
+            int temp = ExecuteNonQueryWithoutParmeter(proc);
+            return temp;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return 0;
+        }
+
+    }
+    public int CheckAvailability(string proc, string sqlvar, string sqloutvar, string id)
+    {
+        try
+        {
+            SqlParameter sp1 = new SqlParameter(sqlvar, id);
+            int temp = ExecuteNonQueryOutputInt(proc, sqloutvar, new SqlParameter[] { sp1 });
+            return temp;
+
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return 0;
+        }
+    }
+
+    public string InsertCSPApproval(string Proc, string Requestid, string cspid)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@requestid", Requestid);
+            SqlParameter sp2 = new SqlParameter("@cspid", cspid);
+
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+    public int ActiveCSPLogin(string cspid)
+    {
+
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+
+            int temp = ExecuteNonQuery("Usp_ActiveCSPLogin", new SqlParameter[] { sp1 });
+            return temp;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return 0;
+        }
+
+    }
+
+    public int ActiveCSPPlan(string cspid, string startingdate, string expirydate, int totaldays, int remainigdays)
+    {
+
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            SqlParameter sp2 = new SqlParameter("@startingdate", startingdate);
+            SqlParameter sp3 = new SqlParameter("@expirydate", expirydate);
+            SqlParameter sp4 = new SqlParameter("@totaldays", totaldays);
+            SqlParameter sp5 = new SqlParameter("@remainingdays", remainigdays);
+            int temp = ExecuteNonQuery("Usp_ActiveCSPLogin", new SqlParameter[] { sp1, sp2, sp3, sp4, sp5 });
+            return temp;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return 0;
+        }
+
+    }
+
+    public DataSet FlipDataSet(DataSet my_DataSet)
+    {
+        DataSet ds = new DataSet();
+        foreach (DataTable dt in my_DataSet.Tables)
+        {
+            DataTable table = new DataTable();
+            for (int i = 0; i <= dt.Rows.Count; i++)
+            {
+                table.Columns.Add(Convert.ToString(i));
+            }
+            DataRow r = null;
+            for (int k = 0; k < dt.Columns.Count; k++)
+            {
+                r = table.NewRow();
+                r[0] = dt.Columns[k].ToString();
+                for (int j = 1; j <= dt.Rows.Count; j++)
+                    r[j] = dt.Rows[j - 1][k];
+                table.Rows.Add(r);
+            }
+            ds.Tables.Add(table);
+        }
+
+        return ds;
+    }
+
+    public string UpdateApproval(string sqlvar, string id, string proc)
+    {
+        int issuccess = 0;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar, id);
+            issuccess = ExecuteNonQuery(proc, new SqlParameter[] { sp1 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+    public string UpdateApprovalStatus_Rid(string sqlvar1, string sqlvar2, string id, string rid, string proc)
+    {
+        int issuccess = 0;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar1, id);
+            SqlParameter sp2 = new SqlParameter(sqlvar2, rid);
+            issuccess = ExecuteNonQuery(proc, new SqlParameter[] { sp1, sp2 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+    public string UpdateCSPPlan(string proc, string cspid, string startingdate, string expirydays, int totalday, int remainingdays, string requestid)
+    {
+        int issuccess = 0;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            SqlParameter sp2 = new SqlParameter("@expirydate", expirydays);
+            SqlParameter sp3 = new SqlParameter("@startingdate", startingdate);
+            SqlParameter sp4 = new SqlParameter("@totaldays", totalday);
+            SqlParameter sp5 = new SqlParameter("@requestid", requestid);
+            ExecuteNonQuery(proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+    public string UpdateCSPPlan1(string proc, string cspid, string expirydays, int totalday, int remainingdays, string requestid)
+    {
+        int issuccess = 0;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            SqlParameter sp2 = new SqlParameter("@expirydate", expirydays);
+            SqlParameter sp3 = new SqlParameter("@totaldays", totalday);
+            SqlParameter sp4 = new SqlParameter("@requestid", requestid);
+            issuccess = ExecuteNonQuery(proc, new SqlParameter[] { sp1, sp2, sp3, sp4, });
+            if (issuccess == 1)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+    public string UpdateMstCSPPlan(string proc, string cspid)
+    {
+        int issuccess = 0;
+        string strSuccess;
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            issuccess = ExecuteNonQuery(proc, new SqlParameter[] { sp1 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+    public void ViewExpirdate(string cspid, Label lblexpirydate, Label lblremainingdays, Label lblsaveacno)
+    {
+        SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+
+        SqlDataReader dr = ExecuteReader("Usp_ViewCSPExpirydate", new SqlParameter[] { sp1 });
+        while (dr.Read())
+        {
+            lblexpirydate.Text = dr[1].ToString();
+            lblremainingdays.Text = dr[2].ToString();
+            lblsaveacno.Text = dr[0].ToString();
+        }
+
+    }
+    public void ViewCSPKoid(string cspid, Label lblkoid)
+    {
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            DataSet ds = ExecuteDataset("Usp_ViewCSPKoid", new SqlParameter[] { sp1 }, "KOID");
+            for (int i = 0; i < ds.Tables["KOID"].Rows.Count; i++)
+            {
+                lblkoid.Text += ds.Tables["KOID"].Rows[i][0].ToString() + " ";
+            }
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+
+        }
+
+    }
+
+    public int Changepassword(string proc, string id, string oldpwd, string newpwd)
+    {
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@cspid", id);
+            SqlParameter sp2 = new SqlParameter("@OldPassword", oldpwd);
+            SqlParameter sp3 = new SqlParameter("@NewPassword", newpwd);
+            int temp = ExecuteNonQuery(proc, new SqlParameter[] { sp1, sp2, sp3 });
+            return temp;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return 0;
+        }
+    }
+
+    public DataSet GridBindKByTwoDate_ID(string proc, GridView gv, string vt, string sqlvar1, string sqlvar2, string sqlvar3, string id, string startdate, string enddate)
+    {
+        FSqlHelper fsh = new FSqlHelper();
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar1, id);
+            SqlParameter sp2 = new SqlParameter(sqlvar2, startdate);
+            SqlParameter sp3 = new SqlParameter(sqlvar3, enddate);
+            DataSet ds = fsh.ExecuteDataset(proc, new SqlParameter[] { sp1, sp2, sp3 }, vt);
+            gv.DataSource = ds;
+            gv.DataBind();
+            return ds;
+
+        }
+        catch (Exception ex)
+        {
+
+            string str = ex.Message;
+            return null;
+        }
+    }
+
+    public DataSet GridBindKByTwoDate(string proc, GridView gv, string vt, string sqlvar1, string sqlvar2, string startdate, string enddate)
+    {
+
+        FSqlHelper fsh = new FSqlHelper();
+        try
+        {
+            SqlParameter sp1 = new SqlParameter(sqlvar1, startdate);
+            SqlParameter sp2 = new SqlParameter(sqlvar2, enddate);
+            DataSet ds = fsh.ExecuteDataset(proc, new SqlParameter[] { sp1, sp2 }, vt);
+            gv.DataSource = ds;
+            gv.DataBind();
+            return ds;
+
+        }
+        catch (Exception ex)
+        {
+
+            string str = ex.Message;
+            return null;
+        }
+    }
+
+
+    public string UpdateCSPDetails(string proc, string cspid, string village, string emailid, string address, string contactno)
+    {
+        int issuccess = 0;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            SqlParameter sp2 = new SqlParameter("@village", village);
+            SqlParameter sp3 = new SqlParameter("@emailid", emailid);
+            SqlParameter sp4 = new SqlParameter("@address", address);
+            SqlParameter sp5 = new SqlParameter("@mobileno", contactno);
+            issuccess = ExecuteNonQuery(proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+    public string InsertReport(string Proc, int srno, string koid, string actype, int totalac, string uploaddate)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@srno", srno);
+            SqlParameter sp2 = new SqlParameter("@koid", koid);
+            SqlParameter sp3 = new SqlParameter("@accounttype", actype);
+            SqlParameter sp4 = new SqlParameter("@totalac", totalac);
+            SqlParameter sp5 = new SqlParameter("@uploaddate", uploaddate);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public string InsertSBIBill(string Proc, FileUpload fu, string billdate, string uploaddate)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        OleDbConnection exlcon;
+        try
+        {
+            string str = fileupoad(fu);
+            #region function
+            if (str != null)
+            {
+                string cspcode = "";
+                int numofaccountc = 0;
+                double accountcomm = 0.00;
+                int nofrunningac = 0;
+                double acmfee = 0.00;
+                double avgbal = 0.00;
+                double payableavgcomm = 0.00;
+                double ftcomm = 0.00;
+                int totalrd = 0;
+                double rdcomm = 0.00;
+                double Withdrawal = 0.00;
+                double withdrawalcomm = 0.00;
+                double deposit = 0.00;
+                double depositcomm = 0.00;
+                double totalcomm = 0.00;
+                double tdstax = 0.00;
+                double finalamt = 0.00;
+                double savepayout = 0.00;
+                double dcpayout = 0.00;
+                double csppayout = 0.00;
+
+                string str_conexion = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + HttpContext.Current.Server.MapPath("~/Report/" + str) + ";Extended Properties=\"Excel 12.0;HDR=YES;\"";
+                exlcon = new OleDbConnection(str_conexion);
+                OleDbCommand ocmd = new OleDbCommand("select * from [Sheet1$]", exlcon);
+                exlcon.Open();
+                OleDbDataReader odr = null;
+                odr = ocmd.ExecuteReader();
+                #region While
+                while (odr.Read())
+                {
+
+                    cspcode = odr[0].ToString();
+                    if (odr[1].ToString() != "")
+                    {
+                        numofaccountc = Convert.ToInt32(odr[1].ToString());
+                    }
+                    else
+                    {
+                        numofaccountc = 0;
+                    }
+
+                    if (odr[2].ToString() != "")
+                    {
+                        accountcomm = Convert.ToDouble(odr[2].ToString());
+                    }
+                    else
+                    {
+                        accountcomm = 0.00;
+                    }
+                    if (odr[3].ToString() != "")
+                    {
+                        nofrunningac = Convert.ToInt32(odr[3].ToString());
+                    }
+                    else
+                    {
+                        nofrunningac = 0;
+                    }
+
+                    if (odr[4].ToString() != "")
+                    {
+                        acmfee = Convert.ToDouble(odr[4].ToString());
+                    }
+                    else
+                    {
+                        acmfee = 0.00;
+                    }
+
+                    if (odr[5].ToString() != "")
+                    {
+                        avgbal = Convert.ToDouble(odr[5].ToString());
+                    }
+                    else
+                    {
+                        avgbal = 0.00;
+                    }
+
+                    if (odr[6].ToString() != "")
+                    {
+                        payableavgcomm = Convert.ToDouble(odr[6].ToString());
+                    }
+                    else
+                    {
+                        payableavgcomm = 0.00;
+                    }
+
+                    if (odr[7].ToString() != "")
+                    {
+                        ftcomm = Convert.ToDouble(odr[7].ToString());
+                    }
+                    else
+                    {
+                        ftcomm = 0.00;
+                    }
+
+                    if (odr[8].ToString() != "")
+                    {
+                        totalrd = Convert.ToInt32(odr[8].ToString());
+                    }
+                    else
+                    {
+                        totalrd = 0;
+
+                    }
+                    if (odr[9].ToString() != "")
+                    {
+                        rdcomm = Convert.ToDouble(odr[9].ToString());
+                    }
+                    else
+                    {
+                        rdcomm = 0.00;
+                    }
+                    if (odr[10].ToString() != "")
+                    {
+                        Withdrawal = Convert.ToDouble(odr[10].ToString());
+                    }
+                    else
+                    {
+                        Withdrawal = 0.00;
+                    }
+                    if (odr[11].ToString() != "")
+                    {
+                        withdrawalcomm = Convert.ToDouble(odr[11].ToString());
+                    }
+                    else
+                    {
+                        withdrawalcomm = 0.00;
+                    }
+                    if (odr[12].ToString() != "")
+                    {
+                        deposit = Convert.ToDouble(odr[12].ToString());
+                    }
+                    else
+                    {
+                        deposit = 0.00;
+                    }
+                    if (odr[13].ToString() != "")
+                    {
+                        depositcomm = Convert.ToDouble(odr[13].ToString());
+                    }
+                    else
+                    {
+                        depositcomm = 0.00;
+                    }
+                    if (odr[14].ToString() != "")
+                    {
+                        totalcomm = Convert.ToDouble(odr[14].ToString());
+                    }
+                    else
+                    {
+                        totalcomm = 0.00;
+                    }
+                    if (odr[15].ToString() != "")
+                    {
+                        tdstax = Convert.ToDouble(odr[15].ToString());
+                    }
+                    else
+                    {
+                        tdstax = 0.00;
+                    }
+                    if (odr[16].ToString() != "")
+                    {
+                        finalamt = Convert.ToDouble(odr[16].ToString());
+                    }
+                    else
+                    {
+                        finalamt = 0.00;
+                    }
+                    if (odr[17].ToString() != "")
+                    {
+                        savepayout = Convert.ToDouble(odr[17].ToString());
+                    }
+                    else
+                    {
+                        savepayout = 0.00;
+                    }
+                    if (odr[18].ToString() != "")
+                    {
+                        dcpayout = Convert.ToDouble(odr[18].ToString());
+                    }
+                    else
+                    {
+                        dcpayout = 0.00;
+                    }
+                    if (odr[19].ToString() != "")
+                    {
+                        csppayout = Convert.ToDouble(odr[19].ToString());
+                    }
+                    else
+                    {
+                        csppayout = 0.00;
+                    }
+
+
+                    if (odr[0].ToString() != "")
+                    {
+                        SqlParameter sp1 = new SqlParameter("@cspcode", cspcode);
+                        SqlParameter sp2 = new SqlParameter("@account", numofaccountc);
+                        SqlParameter sp3 = new SqlParameter("@ac_comm", accountcomm);
+                        SqlParameter sp4 = new SqlParameter("@liveac", nofrunningac);
+                        SqlParameter sp5 = new SqlParameter("@acmainfee", acmfee);
+                        SqlParameter sp6 = new SqlParameter("@avgb", avgbal);
+                        SqlParameter sp7 = new SqlParameter("@payableavgcomm", payableavgcomm);
+                        SqlParameter sp8 = new SqlParameter("@ftcomm", ftcomm);
+                        SqlParameter sp9 = new SqlParameter("@rdcomm", rdcomm);
+                        SqlParameter sp10 = new SqlParameter("@withdrawal", Withdrawal);
+                        SqlParameter sp11 = new SqlParameter("@widcomm", withdrawalcomm);
+                        SqlParameter sp12 = new SqlParameter("@deposit", deposit);
+                        SqlParameter sp13 = new SqlParameter("@depositcom", depositcomm);
+                        SqlParameter sp14 = new SqlParameter("@totalcomm", totalcomm);
+                        SqlParameter sp15 = new SqlParameter("@tdstax", tdstax);
+                        SqlParameter sp16 = new SqlParameter("@finalamount", finalamt);
+                        SqlParameter sp17 = new SqlParameter("@savepayout", savepayout);
+                        SqlParameter sp18 = new SqlParameter("@dcpayout", dcpayout);
+                        SqlParameter sp19 = new SqlParameter("@csppayout", csppayout);
+                        SqlParameter sp20 = new SqlParameter("@billdate", billdate);
+                        SqlParameter sp21 = new SqlParameter("@uploaddate", uploaddate);
+                        SqlParameter sp22 = new SqlParameter("@totalrd", totalrd);
+                        issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8, sp9, sp10, sp11, sp12, sp13, sp14, sp15, sp16, sp17, sp18, sp19, sp20, sp21, sp22 });
+                        if (issuccess == 1)
+                        {
+                            strSuccess = "Inserted Successfully";
+                        }
+                        else
+                        {
+                            strSuccess = "Insertion Failed";
+                        }
+                    }
+                }
+                #endregion
+                exlcon.Close();
+            }
+            else
+            {
+                strSuccess = "Server Error";
+            }
+            #endregion
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+
+
+    }
+    public string InsertSaveLedger(string Proc, FileUpload fu, string date)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+            string str = fileupoad(fu);
+            #region function
+            if (str != null)
+            {
+
+                int srno = 0;
+                string acno = "";
+                string drparticular = "";
+                double dramt = 0.00;
+                string crparticualr = "";
+                double cramt = 0.00;
+                string str_conexion = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + HttpContext.Current.Server.MapPath("~/Report/" + str) + ";Extended Properties=\"Excel 12.0;HDR=YES;\"";
+                OleDbConnection exlcon = new OleDbConnection(str_conexion);
+                OleDbCommand ocmd = new OleDbCommand("select * from [Sheet1$]", exlcon);
+                exlcon.Open();
+                OleDbDataReader odr = null;
+                odr = ocmd.ExecuteReader();
+                #region while
+                while (odr.Read())
+                {
+
+                    if (odr[0].ToString() != "")
+                    {
+                        srno = Convert.ToInt32(odr[0].ToString());
+                    }
+                    else
+                    {
+                        srno = 0;
+
+                    }
+                    acno = odr[1].ToString();
+                    drparticular = odr[2].ToString();
+                    if (odr[3].ToString() != "")
+                    {
+                        dramt = Convert.ToDouble(odr[3].ToString());
+                    }
+                    else
+                    {
+                        dramt = 0.00;
+                    }
+                    crparticualr = odr[4].ToString();
+                    if (odr[5].ToString() != "")
+                    {
+                        cramt = Convert.ToDouble(odr[5].ToString());
+                    }
+                    else
+                    {
+                        cramt = 0.00;
+                    }
+
+
+
+                    if (odr[1].ToString() != "")
+                    {
+                        SqlParameter sp1 = new SqlParameter("@sno", srno);
+                        SqlParameter sp2 = new SqlParameter("@acno", acno);
+                        SqlParameter sp3 = new SqlParameter("@drp", drparticular);
+                        SqlParameter sp4 = new SqlParameter("@dramt", dramt);
+                        SqlParameter sp5 = new SqlParameter("@crp", crparticualr);
+                        SqlParameter sp6 = new SqlParameter("@cramt", cramt);
+                        SqlParameter sp7 = new SqlParameter("@date", date);
+
+                        issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5, sp6, sp7 });
+                        if (issuccess == 1)
+                        {
+                            strSuccess = "Inserter Successfully";
+                        }
+                        else
+                        {
+                            strSuccess = "Insertion Failed";
+                        }
+                    }
+                }
+                #endregion
+                exlcon.Close();
+
+            }
+            else
+            {
+                strSuccess = "Server Error";
+            }
+            #endregion
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+
+    }
+
+
+    public DataSet GridBindBYID_OneDate(string proc, GridView GV, string vt, string sqlvar1, string sqlvar2, string id, string date)
+    {
+
+
+
+
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar1, id);
+            SqlParameter sp2 = new SqlParameter(sqlvar2, date);
+
+            DataSet ds = ExecuteDataset(proc, new SqlParameter[] { sp1, sp2 }, vt);
+            GV.DataSource = ds;
+            GV.DataBind();
+            return ds;
+
+        }
+        catch (Exception ex)
+        {
+
+            string str = ex.Message;
+            return null;
+        }
+    }
+
+
+    public int Count(string proc, string sqlvar, string id, string vt)
+    {
+
+        try
+        {
+            int temp = 0;
+            SqlParameter sp1 = new SqlParameter(sqlvar, id);
+            DataSet ds = ExecuteDataset(proc, new SqlParameter[] { sp1 }, vt);
+            if (ds.Tables[vt].Rows.Count > 0)
+            {
+                temp = Convert.ToInt32(ds.Tables[vt].Rows[0]["NumberofKOID"].ToString());
+            }
+            return temp;
+
+        }
+        catch (Exception ex)
+        {
+
+            string str = ex.Message;
+            return 0;
+        }
+    }
+
+    public string ViewExpiryDate(string proc, string sqlvar, string id, string vt)
+    {
+
+        try
+        {
+            string temp = "";
+            SqlParameter sp1 = new SqlParameter(sqlvar, id);
+            DataSet ds = ExecuteDataset(proc, new SqlParameter[] { sp1 }, vt);
+            if (ds.Tables[vt].Rows.Count > 0)
+            {
+                temp = ds.Tables[vt].Rows[0]["expirydate"].ToString();
+            }
+            return temp;
+
+        }
+        catch (Exception ex)
+        {
+
+            string str = ex.Message;
+            return null;
+        }
+    }
+
+    public string InsertCSPQuery(string Proc, string saveacno, string koid, string name, string mobileno, string emailid, string query)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@saveacno", saveacno);
+            SqlParameter sp2 = new SqlParameter("@koid", koid);
+            SqlParameter sp3 = new SqlParameter("@name", name);
+            SqlParameter sp4 = new SqlParameter("@mobileno", mobileno);
+            SqlParameter sp5 = new SqlParameter("@emailid", emailid);
+            SqlParameter sp6 = new SqlParameter("@query", query);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5, sp6 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public string InsertSavePaid(string Proc, string saveacno, string date, double amount, string paymentmode)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@saveacno", saveacno);
+            SqlParameter sp2 = new SqlParameter("@date", date);
+            SqlParameter sp3 = new SqlParameter("@amount", amount);
+            SqlParameter sp4 = new SqlParameter("@paymentmode", paymentmode);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Saved Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public string InsertCSPLogDetails(string Proc, string cspid, string saveacno, string name)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            SqlParameter sp2 = new SqlParameter("@saveacno", saveacno);
+            SqlParameter sp3 = new SqlParameter("@name", name);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public string UpdateKOID(string sqlvar1, string sqlvar2, int id, string value, string proc)
+    {
+        int issuccess = 0;
+        string strSuccess;
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter(sqlvar1, id);
+            SqlParameter sp2 = new SqlParameter(sqlvar2, value);
+            issuccess = ExecuteNonQuery(proc, new SqlParameter[] { sp1, sp2 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+
+    public string InsertCSPKOID(string Proc, string cspid, string koid)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@cspid", cspid);
+            SqlParameter sp2 = new SqlParameter("@koid", koid);
+
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+    public int SendLoginDetails(string email, string name, string userid, string password)
+    {
+        try
+        {
+            System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage();
+            mail.To.Add(email);
+            mail.From = new MailAddress("appointment@astrosolutions.net");
+            mail.Subject = "SAVECSP Login Details";
+            mail.Body = "<br/><br/><br/>Dear  " + name + "<br/><br/>Here are the login details for your SAVECSP Account<hr/><br/><br/>" + "<br/><b>userid:</b>" + userid + "<br/><b>password:</b>" + password + "<br/><br/>" + "To change your password<a href='http://savecsp.com/Login.aspx'>Click here</a>" + "<br/><br/> Best Regards,<br/>SAVECSP Team";
+            mail.IsBodyHtml = true;
+            SmtpClient smtp = new SmtpClient();
+            smtp.Host = "smtp.gmail.com";
+            smtp.Credentials = new System.Net.NetworkCredential("appointment@astrosolutions.net", "rohit@123");
+            smtp.EnableSsl = true;
+            smtp.Send(mail);
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return 0;
+        }
+    }
+
+    public string InsertInitialAmount(string Proc, string saveacno, string date, double amount, string paymentmode, string remarks)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@saveacno", saveacno);
+            SqlParameter sp2 = new SqlParameter("@date", date);
+            SqlParameter sp3 = new SqlParameter("@amount", amount);
+            SqlParameter sp4 = new SqlParameter("@paymentmode", paymentmode);
+            SqlParameter sp5 = new SqlParameter("@remarks", remarks);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Saved Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+
+
+    public string InsertMarqueeMessage(string Proc, string message)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@marquee", message);
+
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Saved Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+    public string InsertSaveExpence(string Proc, string saveacno, string date, double amount, string expencetype, string remarks)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@saveacno", saveacno);
+            SqlParameter sp2 = new SqlParameter("@date", date);
+            SqlParameter sp3 = new SqlParameter("@amount", amount);
+            SqlParameter sp4 = new SqlParameter("@type", expencetype);
+            SqlParameter sp5 = new SqlParameter("@remarks", remarks);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3, sp4, sp5 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Saved Successfully";
+
+            }
+
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+    public string InsertMstsaveref(string Proc, string sqlvar1, string sqlvar2, string SaveRefNo, string Name, TextBox txt1, TextBox txt2)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@SaveRefNo", SaveRefNo);
+            SqlParameter sp2 = new SqlParameter("@Name", Name);
+
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";
+                txt1.Text = "";
+                txt2.Text = "";
+            }
+            if (issuccess == 2)
+            {
+                txt1.Text = "";
+                txt2.Text = "";
+                strSuccess = "Duplicate entry not allowed";
+                return strSuccess;
+
+            }
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+    public string Insertaddkoid(string Proc, string sqlvar1, string sqlvar2, string sqlvar3, string SaveAcno, string Name, string Koid)
+    {
+        int issuccess = 0;
+        string strSuccess = "";
+        try
+        {
+
+            SqlParameter sp1 = new SqlParameter("@SaveAcno", SaveAcno);
+            SqlParameter sp2 = new SqlParameter("@Name", Name);
+            SqlParameter sp3 = new SqlParameter("@Koid", Koid);
+            issuccess = ExecuteNonQuery(Proc, new SqlParameter[] { sp1, sp2, sp3 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Inserted Successfully";             
+             
+            }
+            if (issuccess == 2)
+            {               
+                
+                strSuccess = "Duplicate entry not allowed";
+                return strSuccess;
+
+            }
+            if (issuccess == 0)
+            {
+                strSuccess = "Insertion Faild";
+            }
+            return strSuccess;
+        }
+
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            strSuccess = "Sever Error";
+            return strSuccess;
+        }
+    }
+    public string UpdatesaveKoidDetails(string proc, string Name, string Koid)
+    {
+        int issuccess = 0;
+        string strSuccess;
+        try
+        {            
+            
+            SqlParameter sp3 = new SqlParameter("@Name", Name);
+            SqlParameter sp4 = new SqlParameter("@Koid", Koid);
+
+
+            issuccess = ExecuteNonQuery(proc, new SqlParameter[] { sp3, sp4 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+    public string DeletesaveKoidDetails(string proc, int id)
+    {
+        int issuccess = 0;
+        string strSuccess;
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@id", id);
+
+
+
+            issuccess = ExecuteNonQuery(proc, new SqlParameter[] { sp1 });
+            if (issuccess == 1)
+            {
+                strSuccess = "Updated Successfully";
+            }
+            else
+            {
+                strSuccess = "Updation Failed";
+            }
+            return strSuccess;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return null;
+        }
+
+    }
+    public bool ISCheck(GridView GV, string checkboxid)
+    {
+        bool a = false;
+        for (int i = 0; i < GV.Rows.Count; i++)
+        {
+            CheckBox check = (CheckBox)GV.Rows[i].FindControl(checkboxid);
+            if (check.Checked == true)
+            {
+                a = true;
+
+            }
+
+        }
+        return a;
+    }
+
+    public int updatesaveKOID(int id, string Name, string koid)
+    {
+        try
+        {
+            SqlParameter sp1 = new SqlParameter("@id", id);
+            SqlParameter sp2 = new SqlParameter("@name", Name);
+            SqlParameter sp3 = new SqlParameter("@koid", koid);
+            int temp = ExecuteNonQuery("UpdatesaveKoidDetails", new SqlParameter[] { sp1, sp2, sp3 });
+            return temp;
+        }
+        catch (Exception ex)
+        {
+            string str = ex.Message;
+            return 0;
+        }
+    }
+
+    public void insertSaveACNO_UnderDC(GridView GV, string Checkboxid,string LblSaveACNo,DropDownList userid,Label DCCODE,Label Message)
+    { 
+        try
+        {
+         bool check=ISCheck(GV,Checkboxid);
+         int issuccess = 0;
+        if(check==true)
+        {
+            foreach (GridViewRow Row in GV.Rows)
+            {
+                CheckBox Chk = (CheckBox)Row.FindControl(Checkboxid);
+                if (Chk.Checked == true)
+                {
+                    string saveacno = (((Label)Row.FindControl(LblSaveACNo)).Text);
+                    SqlParameter sp1 = new SqlParameter("@UserId", userid.SelectedItem.Text);
+                    SqlParameter sp2 = new SqlParameter("@SaveRefNo", saveacno);
+                    SqlParameter sp3 = new SqlParameter("@DCCode", DCCODE.Text);
+                    issuccess= ExecuteNonQuery("Usp_InsSaveACNO_UnderDC", new SqlParameter[] { sp1, sp2, sp3 });
+                    if(issuccess!=0)
+                    {
+                        SqlParameter sp4 = new SqlParameter("@SaveRefNo", saveacno);
+                        issuccess=ExecuteNonQuery("Usp_UpdateMstSaveNoStatus",new SqlParameter[]{sp4});
+                    }
+
+                }
+                
+            }
+            if (issuccess != 0)
+            {
+                Message.Text = "Selected Save AC/NO Asigned to Selected DC";
+                GridBind("Usp_ViewSaveRefNo", "SaveRefNo", GV);
+                userid.SelectedIndex = -1;
+                DCCODE.Text = "";
+               
+            }
+            else
+            {
+
+            }
+        }
+        else
+        {
+            Message.Text = "Please Select Save Ref/NO";
+        }
+        }
+        catch(Exception Ex)
+        {
+        string Str=Ex.Message;
+        }
+    }
+
+    
+}

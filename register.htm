@@ -1,0 +1,431 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style type="text/css">
+        body
+        {
+            display: block;
+            margin: 8px;
+        }
+        div
+        {
+            padding: 0;
+            margin: 0;
+            font-weight: normal;
+        }
+        #register
+        {
+            width: 977px;
+            float: left;
+            border-radius: 4px;
+            border: #999999 solid 1px;
+        }
+        .register_details h6
+        {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            color: #1c7495;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 0 0 18px 0;
+            text-transform: capitalize;
+        }
+        .register_details .row
+        {
+            float: left;
+            width: 100%;
+            padding-bottom: 14px;
+            margin-left: 0px;
+        }
+        .register_details input.text
+        {
+            float: left;
+            width: 250px;
+            background-color: #F8F8F8;
+            height: 16px;
+            border: 1px solid #cccccc;
+            padding: 5px 5px 5px;
+            font-size: 13px;
+            color: #666;
+            border-radius: 10px;
+            box-shadow: 0 1px 2px #1c7495 inset;
+            outline: medium none;
+        }
+        .register_details
+        {
+            float: left;
+            width: 960px;
+            padding-left: 10px;
+            padding-bottom: 20px;
+            padding-top: 20px;
+        }
+        #register h5
+        {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #fff;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 4px;
+            background-color: #1c7495;
+            height: 30px;
+            margin: 5px 5px 3px 5px;
+            float: left;
+            width: 957px;
+            padding: 12px 0 0 10px;
+        }
+         #register p
+         {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            color: #FF0000;
+            font-weight: normal;
+            text-decoration: none;
+            width: 900px;
+            float: left;
+            padding-left: 14px;
+        }
+        .register_details form
+        {
+            float: left;
+        }
+        .register_details label
+        {
+            float: left;
+            width: 350px;
+            font-size: 15px;
+            line-height: 15px;
+            color: #323232;
+            font-weight: bold;
+            padding-bottom: 0px;
+            padding-top: 6px;
+            text-align: right;
+            padding-right: 0px;
+        }
+        .register_details select 
+        {
+            float: left;
+            width: 250px;
+            background-color: #F8F8F8;
+            height: 28px;
+            border: 1px solid #cccccc;
+            padding: 5px 5px 5px;
+            font-size: 13px;
+            color: #666;
+            border-radius: 10px;
+            box-shadow: 0 1px 2px #1c7495 inset;
+            outline: medium none;
+        }
+        .register_details label span 
+        {
+            color: #FF0000;
+        }
+        .register_details .send_btn
+        {
+            float: left;
+            width: 185px;
+            margin-left: 245px;
+        }
+    </style>
+</head>
+<body>
+<div id="register">
+<h5>Become a Member of Bharat Employement and find the right job. Registration Information</h5>
+<p>Note: If you already have an account with us, please login at the <a href="signin.aspx">Login Page</a></p>
+<p align="center"></p>
+
+<div class="register_details">
+            
+<form name="frmRegister" id="frmRegister" method="post" action="" enctype="multipart/form-data">
+			
+<h6>Create Your Account</h6>			
+              <div class="row">
+                <label><span>*&nbsp;</span>First Name&nbsp;:</label>
+                <input  type="text" name="dpzendoname" id="dpzendoname" class="text" value="" />
+				
+              </div>
+              <div class="row">
+                <label><span>*&nbsp;</span>Last Name&nbsp;:</label>
+                <input  type="text" name="dpzendoloname" id="dpzendoloname" class="text" value=""/>
+              </div>
+			  <div class="row">
+                <label><span>*&nbsp;</span>Email ID&nbsp;:</label>
+                <input  type="text" name="dpzendoeomeail" id="dpzendoeomeail" class="text" onblur="statuschange(this.value)" value="" /> <span id="txtHint"></span>
+              </div>
+			  <div class="row">
+                <label><span>*&nbsp;</span>Password&nbsp;:</label>
+                <input  type="password" name="dpzendoapsord" id="dpzendoapsord" class="text" />
+              </div>
+			  <div class="row">
+                <label><span>*&nbsp;</span>Confirm Password&nbsp;:</label>
+                <input  type="password" name="confirm_password" id="confirm_password" class="text" />
+              </div>
+<div style="border-bottom: #999999 dashed 1px; margin-bottom:20px;">&nbsp;</div>
+<h6>Contact Informations</h6>			
+              <div class="row">
+                <label><span>*&nbsp;</span>Address&nbsp;:</label>
+                <input  type="text" name="dpareso" id="dpareso" class="text" value="" />
+              </div>
+              <div class="row">
+                <label><span>*&nbsp;</span>City&nbsp;:</label>
+                <input  type="text" name="city" id="city" class="text" value="" />
+              </div>
+			  <div class="row">
+                <label><span>*&nbsp;</span>State&nbsp;:</label>
+				<select name="state" id="state"><option value="">--Select--</option>             		<option value="1">Andhra Pradesh</option>
+                        		<option value="2">Arunachal Pradesh</option>
+                        		<option value="3">Assam</option>
+                        		<option value="4">Bihar</option>
+                        		<option value="5">Chhattisgarh</option>
+                        		<option value="6">Goa</option>
+                        		<option value="7">Gujarat</option>
+                        		<option value="8">Haryana</option>
+                        		<option value="9">Himachal Pradesh</option>
+                        		<option value="10">Jammu and Kashmir</option>
+                        		<option value="11">Jharkhand</option>
+                        		<option value="12">Karnataka</option>
+                        		<option value="13">Kerala</option>
+                        		<option value="14">Madhya Pradesh</option>
+                        		<option value="15">Maharashtra</option>
+                        		<option value="16">Manipur</option>
+                        		<option value="17">Meghalaya</option>
+                        		<option value="18">Mizoram</option>
+                        		<option value="19">Nagaland</option>
+                        		<option value="20">Orissa</option>
+                        		<option value="21">Panjab</option>
+                        		<option value="22">Rajsthan</option>
+                        		<option value="23">Delhi</option>
+                        		<option value="24">Sikkim</option>
+                        		<option value="25">Tamil Nadu</option>
+                        		<option value="26">Tripura</option>
+                        		<option value="27">Uttar Pradesh</option>
+                        		<option value="28">Uttarakhand</option>
+                        		<option value="29">West Bengal</option>
+                        		<option value="30">Andaman and Nicobar Islands</option>
+            </select>
+              </div>
+			  <div class="row">
+                <label><span>*&nbsp;</span>Zip Code&nbsp;:</label>
+                <input  type="text" name="zipcode" id="zipcode" class="text" value="" />
+              </div>
+			  <div class="row">
+                <label><span>*&nbsp;</span>Country&nbsp;:</label>
+                <input type="text" value="India" name="country" id="country" class="text" />
+              </div>
+			  <div class="row">
+                <label><span>*&nbsp;</span>Mobile No. (10 Digits without +91)&nbsp;:</label>
+               <input  type="text" name="phone" id="phone" class="text" onblur="statusPhonechange(this.value);" value="" /><span id="txtHintPhone"></span>
+              </div>
+<div style="border-bottom: #999999 dashed 1px; margin-bottom:20px;">&nbsp;</div>
+<h6>Current Professional Informations</h6>			
+              <div class="row">
+                <label><span>*&nbsp;</span>Designation&nbsp;:</label>
+                <input  type="text" name="designation" id="designation" class="text" value=""  /></div>
+              <div class="row">
+                <label><span>*&nbsp;</span>Years of experience&nbsp;:</label>
+                <select name="years_exp_id" id="years_exp_id">
+                <option value="">--Select --</option>
+                         		<option value="1">Fresher</option>
+                       		<option value="2">1 year - 2 years</option>
+                       		<option value="3">2 years - 3 years</option>
+                       		<option value="4">3 years - 4 years</option>
+                       		<option value="5">4 years - 5 years</option>
+                       		<option value="6">5 years - 6 years</option>
+                       		<option value="7">6 years - 7 years</option>
+                       		<option value="8">7 years - 8 years</option>
+                       		<option value="9">8 years - 9 years</option>
+                       		<option value="10">9 years - 10 years</option>
+                       		<option value="11">Above 10 years</option>
+                        	</select>
+              </div>
+			  <div class="row">
+                <label><span>*&nbsp;</span>Functional Area&nbsp;:</label>
+                <select name="functional_area_id" id="functional_area_id">
+                <option value="">--Select --</option>
+                         		<option value="1">Accounting, Finance</option>
+                        		<option value="2">Advertising, PR, MR, Event Management</option>
+                        		<option value="3">Agriculture, Dairy</option>
+                        		<option value="4">Air Conditioning</option>
+                        		<option value="5">Airline</option>
+                        		<option value="6">Animation, Gaming</option>
+                        		<option value="7">Appliance</option>
+                        		<option value="8">Architecture, Interior Design</option>
+                        		<option value="9">Automobile</option>
+                        		<option value="10">Banking, Financial Service, Broking</option>
+                        		<option value="11">Biotechnology</option>
+                        		<option value="12">BPO, Call Centre, Ites</option>
+                        		<option value="13">Brewery, Distillery</option>
+                        		<option value="14">Cement</option>
+                        		<option value="15">Ceramics, Sanitary Ware</option>
+                        		<option value="16">Chemicals</option>
+                        		<option value="17">Construction</option>
+                        		<option value="18">Consumer Electronics</option>
+                        		<option value="19">Courier</option>
+                        		<option value="20">Durables</option>
+                        		<option value="21">Auto/Auto Ancillary</option>
+                        		<option value="22">Aviation / Aerospace Firms</option>
+                        		<option value="24">Agent</option>
+                        		<option value="25">Analytics & Business Intelligence</option>
+                        		<option value="26">Content / Journalism</option>
+                        		<option value="27">Corporate Planning / Consulting</option>
+                        		<option value="28">Defence/Government</option>
+                        		<option value="29">Engineering/Metals</option>
+                        		<option value="30">Education/Teaching/Training</option>
+                        		<option value="31">Electricals / Switchgears</option>
+                        		<option value="32">Export/Import</option>
+                        		<option value="33">Engineering Design / R & D</option>
+                        		<option value="34">Facility Management</option>
+                        		<option value="35">Fertilizers/Pesticides</option>
+                        		<option value="36">FMCG/Foods/Beverage</option>
+                        		<option value="37">Food Processing</option>
+                        		<option value="44">Guards / Security Services</option>
+                        		<option value="43">Glass</option>
+                        		<option value="42">Gems & Jewellery</option>
+                        		<option value="45">Heat Ventilation Air Conditioning</option>
+                        		<option value="46">Hotels/Restaurants/Airlines/Travel</option>
+                        		<option value="47">Hotels / Restaurants</option>
+                        		<option value="48">HR / Administration / IR</option>
+                        		<option value="49">IT- Hardware / Telecom / Technical Staff / Support</option>
+                        		<option value="50">IT-Software/Software Services</option>
+                        		<option value="51">IT Software - Client Server</option>
+                        		<option value="52">IT Software - Mainframe</option>
+                        		<option value="53">IT Software - Middleware</option>
+                        		<option value="54">IT Software - Mobile</option>
+                        		<option value="55">IT Software - System Programming</option>
+                        		<option value="56">IT Software - Telecom Software</option>
+                        		<option value="57">IT Software - DBA / Datawarehousing</option>
+                        		<option value="58">IT Software - E-Commerce / Internet Technologies</option>
+                        		<option value="59">IT Software - Embedded /EDA /VLSI /ASIC /Chip Des.</option>
+                        		<option value="60">IT Software - ERP / CRM</option>
+                        		<option value="61">IT Software - Network Administration / Security</option>
+                        		<option value="62">IT Software - Application Programming / Maintenance</option>
+                        		<option value="63">IT Software - QA & Testing</option>
+                        		<option value="64">IT Software - Systems / EDP / MIS</option>
+                        		<option value="65">ITES / BPO / KPO / Customer Service / Operations</option>
+                        		<option value="66">IT Software - Other</option>
+                        		<option value="67">Insurance</option>
+                        		<option value="68">Industrial Products/Heavy Machinery</option>
+                        		<option value="69">KPO / Research /Analytics</option>
+                        		<option value="70">Legal</option>
+                        		<option value="71">Marketing / Advertising / MR / PR</option>
+                        		<option value="72">Merchandising</option>
+                        		<option value="73">Media/Dotcom/Entertainment</option>
+                        		<option value="74">Medical/Healthcare/Hospital</option>
+                        		<option value="75">Mining</option>
+                        		<option value="76">NGO/Social Services</option>
+                        		<option value="77">Office Equipment/Automation</option>
+                        		<option value="78">Oil and Gas/Power/Infrastructure/Energy</option>
+                        		<option value="79">Paper</option>
+                        		<option value="80">PetroChemical/Plastic/Rubber</option>
+                        		<option value="81">Packaging</option>
+                        		<option value="82">Pharma / Biotech / Healthcare / Medical / R & D</option>
+                        		<option value="83">Pharma/Biotech/Clinical Research</option>
+                        		<option value="84">Printing/Packaging </option>
+                        		<option value="85">Publishing</option>
+                        		<option value="86">Production / Maintenance / Quality</option>
+                        		<option value="87">Purchase / Logistics / Supply Chain</option>
+                        		<option value="88">Real Estate/Property</option>
+                        		<option value="89">Recruitment</option>
+                        		<option value="90">Retail</option>
+                        		<option value="91">Sales / BD</option>
+                        		<option value="92">Secretary / Front Office / Data Entry</option>
+                        		<option value="93">Self Employed / Consultants</option>
+                        		<option value="94">Shipping/Marine</option>
+                        		<option value="95">Site Engineering / Project Management</option>
+                        		<option value="96">Security/Law Enforcement</option>
+                        		<option value="97">Semiconductors/Electronics</option>
+                        		<option value="98">Steel</option>
+                        		<option value="99">Strategy /Management Consulting Firms</option>
+                        		<option value="100">Tax / CS / Audit</option>
+                        		<option value="101">Teaching / Education</option>
+                        		<option value="102">Telcom/ISP</option>
+                        		<option value="103">Textiles/Garments/Accessories</option>
+                        		<option value="104">Ticketing / Travel / Airlines</option>
+                        		<option value="105">Transportation/Freight</option>
+                        		<option value="106">Top Management</option>
+                        		<option value="107">TV / Films / Production</option>
+                        		<option value="108">Water Treatment / Waste Management</option>
+                        		<option value="109">Web / Graphic Design / Visualiser</option>
+                        		<option value="110">Wellness/Fitness/Sports</option>
+                        		<option value="111">Other</option>
+                         	</select>
+              </div>
+			  <div class="row">
+                <label><span>*&nbsp;</span>Salary Per Month&nbsp;:</label>
+               <input type="text" name="salary_pm" value="" id="salary_pm" class="text" />
+              </div>
+<div style="border-bottom: #999999 dashed 1px; margin-bottom:20px;">&nbsp;</div>	
+<h6>Educational Informations</h6>			
+              <div class="row">
+                <label><span>*&nbsp;</span>Basic/Graduation&nbsp;:</label>
+                <select name="graduation" id="graduation" class="fill_form_input"><option value="">--Select--</option>            		<option value="1">Not Pursuing Graduation</option>
+                        		<option value="2">B.A</option>
+                        		<option value="3">B.Arch</option>
+                        		<option value="4">BCA</option>
+                        		<option value="5">B.B.A</option>
+                        		<option value="6">B.Com</option>
+                        		<option value="7">B.Ed</option>
+                        		<option value="8">BDS</option>
+                        		<option value="9">BHM</option>
+                        		<option value="10">B.Pharma</option>
+                        		<option value="11">B.Sc</option>
+                        		<option value="12">B.Tech/B.E.</option>
+                        		<option value="13">LLB</option>
+                        		<option value="14">MBBS</option>
+                        		<option value="15">Diploma</option>
+                        		<option value="16">BVSC</option>
+                        		<option value="17">Other</option>
+            </select>
+              </div>
+              <div class="row">
+                <label><span>*&nbsp;</span>Post Graduation&nbsp;:</label>
+                <select name="pg" id="pg" class="fill_form_input"><option value="">--Select--</option>            		<option value="1">CA</option>
+                        		<option value="2">CS</option>
+                        		<option value="3">ICWA</option>
+                        		<option value="4">Integrated PG</option>
+                        		<option value="5">LLM</option>
+                        		<option value="6">M.A</option>
+                        		<option value="7">M.Arch</option>
+                        		<option value="8">M.Com</option>
+                        		<option value="9">M.Ed</option>
+                        		<option value="10">M.Pharma</option>
+                        		<option value="11">M.Sc</option>
+                        		<option value="12">M.Tech</option>
+                        		<option value="13">MBA/PGDM</option>
+                        		<option value="14">MCA</option>
+                        		<option value="15">MS</option>
+                        		<option value="16">PG Diploma</option>
+                        		<option value="17">MVSC</option>
+                        		<option value="18">MCM</option>
+                        		<option value="19">other</option>
+            </select>
+              </div>
+			  <div class="row">
+                <label>Skills(eg. Java, Php, HR, MIS, Operations)&nbsp;:</label>
+                <input type="text" name="skills" id="skills" value="Type your skills"  onfocus="(this.value == 'Type your skills') && (this.value = '')" onblur="(this.value == '') && (this.value = 'Type your skills')" class="text" />
+              </div>
+<div style="border-bottom: #999999 dashed 1px; margin-bottom:20px;">&nbsp;</div>
+<h6>Upload Resume</h6>			
+              <div class="row">
+                <label style="padding-left:240px;"><input type="file" name="file" id="file"  /> </label>
+				<span style="float:left; color: #999999; font-style:italic; padding-top:5px; padding-left:10px;"> (Only in .doc,.docx,.rtf or .pdf)</span>
+              </div>
+<div style="border-bottom: #999999 dashed 1px; margin-bottom:20px;">&nbsp;</div>
+<h6>Security Code</h6>			
+              <div class="row">
+                <label style="padding-left:72px;"><img src="includes/captcha.php" />
+				
+                </label>
+              </div>
+              <div class="row">
+              <input name="captcha" id="captcha" type="text" class="text" style="margin-left:242px; margin-top:0px; width:110px;">
+              </div>
+			 <div class="send_btn"><input type="submit" name="submit" id="submit" value="Submit" /></div>
+	  </form>      
+
+      </div>
+</div>
+</body>
+</html>
